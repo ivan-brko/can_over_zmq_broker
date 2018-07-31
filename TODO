@@ -1,0 +1,8 @@
+TODO: add configuration and command line arguments support
+TODO: add rest api
+TODO: add logging
+TODO: don't use * for zmq crate version
+TODO: add linting to project (clippy)
+TODO: add formater to project
+TODO: move entire logic to separate lib crate
+TODO: general error handling

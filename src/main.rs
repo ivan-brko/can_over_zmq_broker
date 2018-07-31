@@ -1,3 +1,28 @@
+extern crate zmq;
+
+//TODO: move this function to it's own module
+fn initialize_zmq() -> (zmq::Context, zmq::Socket, zmq::Socket) {
+    let context = zmq::Context::new();
+    let broadcaster = context.socket(zmq::PUSH).unwrap(); //TODO: add error handling here!
+    assert!(broadcaster.bind("tcp:://*:localhost:4567").is_ok()); //TODO: handle this in a nicer way
+
+    let listener = context.socket(zmq::PULL).unwrap(); //TODO: again, handle this in a nicer way
+    assert!(broadcaster.bind("tcp:://*:localhost:4568").is_ok()); //TODO: same thing
+
+    (context, broadcaster, listener)
+}
+
 fn main() {
-    println!("Hello, world!");
+    println!("Starting the can-over-zmq broker");
+    let (_context, broadcaster, listener) = initialize_zmq();
+    
+    loop {
+        //TODO: some flag should be added here, when we want to gracefully exit
+
+        let msg = listener.recv_bytes(0).unwrap(); //TODO: check what this flags set, TODO: Error handling!
+
+        println!("Got a message, sending it to all connected clients!");
+
+        broadcaster.send(&msg, 0).unwrap(); //TODO: checks flags and error handling
+    }
 }
